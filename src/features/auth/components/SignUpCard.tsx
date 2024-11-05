@@ -22,17 +22,12 @@ import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
+import { signUpSchema } from "../schema";
 
-
-const formSchema = z.object({
-    name: z.string().trim().min(3, "name must contain at least 3 character(s)"),
-    email: z.string().email(),
-    password: z.string().min(8).max(256),
-})
 
 const SignUpCard = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof signUpSchema>>({
+        resolver: zodResolver(signUpSchema),
         defaultValues: {
             name: "",
             email: "",
@@ -40,7 +35,7 @@ const SignUpCard = () => {
         },
     })
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = (values: z.infer<typeof signUpSchema>) => {
         console.log({ values });
     }
 
