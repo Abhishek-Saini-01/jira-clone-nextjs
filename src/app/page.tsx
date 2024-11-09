@@ -1,11 +1,13 @@
+
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  
   return (
     
-    <div>
+    <div className="justify-around">
       hello
-      <Button size="lg"  variant="destructive">
+      <Button size="lg"   variant="destructive">
         Hello
       </Button>
       <Button size="lg" variant="primary">
