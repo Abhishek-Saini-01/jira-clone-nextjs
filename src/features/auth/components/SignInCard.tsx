@@ -1,3 +1,4 @@
+"use client";
 import DottedSeparator from "@/components/DottedSeparator";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +27,7 @@ import { loginSchema } from "../schema";
 
 const SignInCard = () => {
 
-    const { mutate } = useLogin();
+    const { mutate:login, isPending } = useLogin();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -37,7 +38,7 @@ const SignInCard = () => {
     })
 
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        mutate({json: values});
+        login({json: values});
     }
 
     return (
@@ -59,6 +60,7 @@ const SignInCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="email"
                                             placeholder="Enter your email address"
                                         />
@@ -76,6 +78,7 @@ const SignInCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="password"
                                             placeholder="Enter password"
                                         />
@@ -86,7 +89,7 @@ const SignInCard = () => {
                         />
 
                         <Button
-                            disabled={false}
+                           disabled={isPending}
                             size="lg"
                             className="w-full"
                             type="submit"
@@ -101,7 +104,7 @@ const SignInCard = () => {
             </div>
             <CardContent className="p-7 flex flex-col gap-y-4">
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
@@ -110,7 +113,7 @@ const SignInCard = () => {
                     Login with Google
                 </Button>
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"

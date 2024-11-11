@@ -1,36 +1,15 @@
+import { getCurrent } from "@/features/auth/actions";
+import UserButton from "@/features/auth/components/UserButton";
+import { redirect } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+export default  async function Home() {
+   const user = await getCurrent();
+   if(!user) redirect("/sign-in");
 
-export default function Home() {
-  
   return (
-    
-    <div className="justify-around">
-      hello
-      <Button size="lg"   variant="destructive">
-        Hello
-      </Button>
-      <Button size="lg" variant="primary">
-        Hello
-      </Button>
-      <Button size="lg" variant="secondary">
-        Hello
-      </Button>
-      <Button size="lg" variant="ghost">
-        Hello
-      </Button>
-      <Button size="lg" variant="muted">
-        Hello
-      </Button>
-      <Button size="lg" variant="outline">
-        Hello
-      </Button>
-      <Button size="lg" variant="teritary">
-        Hello
-      </Button>
-      <p className="text-red-500 font-semibold">
-        hello
-      </p>
+    <div className="h-screen w-screen flex flex-col gap-4 items-center justify-center">
+      <p className="w-fit text-2xl font-semibold text-blue-600">Only visiable to authenticated users</p>
+      <UserButton />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-
+"use client";
 import DottedSeparator from "@/components/DottedSeparator";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +27,7 @@ import { registerSchema } from "../schema";
 
 
 const SignUpCard = () => {
-    const { mutate } = useRegister();
+    const { mutate: register, isPending } = useRegister();
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -38,7 +38,7 @@ const SignUpCard = () => {
     })
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        mutate({json: values});
+        register({json: values});
     }
 
     return (
@@ -72,6 +72,7 @@ const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="text"
                                             placeholder="Enter your name"
                                         />
@@ -89,6 +90,7 @@ const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="email"
                                             placeholder="Enter your email address"
                                         />
@@ -107,6 +109,7 @@ const SignUpCard = () => {
                                         <Input
                                             {...field}
                                             type="password"
+                                            disabled={isPending}
                                             placeholder="Enter password"
                                         />
                                     </FormControl>
@@ -116,12 +119,12 @@ const SignUpCard = () => {
                         />
 
                         <Button
-                            disabled={false}
+                            disabled={isPending}
                             size="lg"
                             className="w-full"
                             type="submit"
                         >
-                            Sign Up
+                            Register
                         </Button>
                     </form>
                 </Form>
@@ -131,7 +134,7 @@ const SignUpCard = () => {
             </div>
             <CardContent className="p-7 flex flex-col gap-y-4">
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
@@ -140,7 +143,7 @@ const SignUpCard = () => {
                     Login with Google
                 </Button>
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
