@@ -18,7 +18,7 @@ const AuthLayout = ({
             <div className="mx-auto max-w-screen-2xl p-4">
                 <nav className="flex justify-between items-center">
                     <Image src="/logo.svg" alt="logo" width={152} height={56} />
-                    <Button variant="secondary" asChild>
+                    <Button  variant="secondary" className="px-10" asChild>
                         <Link
                             href={pathname === "/sign-in" ? "/sign-up" : "/sign-in"}
                         >

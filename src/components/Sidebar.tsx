@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import DottedSeparator from "./DottedSeparator"
 import Navigation from "./Navigation"
+import WorkspaceSwitcher from "./WorkspaceSwitcher"
 
 const Sidebar = () => {
     return (
@@ -14,6 +15,8 @@ const Sidebar = () => {
                     height={48}
                 />
             </Link>
+            <DottedSeparator classname="my-4"/>
+            <WorkspaceSwitcher />
             <DottedSeparator classname="my-4"/>
             <Navigation />
         </aside>
