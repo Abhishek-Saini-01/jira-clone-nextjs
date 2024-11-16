@@ -12,18 +12,18 @@ export const useLogout = () => {
    const queryClient = useQueryClient();
 
    const mutation = useMutation<
-   ResponseType, 
-   Error
+      ResponseType,
+      Error
    >({
-     mutationFn: async () => {
-        const response = await client.api.auth.logout["$post"]();
-        return await response.json();
-     },
-     onSuccess: () => {
+      mutationFn: async () => {
+         const response = await client.api.auth.logout["$post"]();
+         return await response.json();
+      },
+      onSuccess: () => {
          // window.location.reload();
          router.refresh();
-         queryClient.invalidateQueries({queryKey: ["current"]});
-     }
+         queryClient.invalidateQueries({ queryKey: ["current"] });
+      }
    })
 
    return mutation;
