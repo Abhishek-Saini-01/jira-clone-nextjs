@@ -27,34 +27,40 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCreateWorkspace } from "../api/useCreateWorkspace";
-import { createWorkspaceSchema } from "../schemas";
+import { updateWorkspaceSchema } from "../schemas";
+import { Workspace } from "../types";
 
 
-interface CreateWorkspaceFormProps {
+interface EditWorkspaceFormProps {
     onCancel?: () => void;
+    initialValues: Workspace
 }
-const CreateWorkspaceForm = ({
-    onCancel
-}: CreateWorkspaceFormProps) => {
+const EditWorkspaceForm = ({
+    onCancel,
+    initialValues
+}: EditWorkspaceFormProps) => {
     const router = useRouter();
     const { mutate: createWorksapce, isPending } = useCreateWorkspace();
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const form = useForm<z.infer<typeof createWorkspaceSchema>>({
-        resolver: zodResolver(createWorkspaceSchema),
+    const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
+        resolver: zodResolver(updateWorkspaceSchema),
         defaultValues: {
-            name: "",
-            image: ""
+            ...initialValues,
+            image: initialValues.imageUrl ?? "",
         }
     })
 
-    const onSubmit = (values: z.infer<typeof createWorkspaceSchema>) => {
+    const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
         const finalValues = {
             ...values,
-            image: values.image instanceof File ? values.image : "",
+            image: values.image instanceof File ? values.image : undefined,
         }
-        createWorksapce({ form: finalValues }, {
+        createWorksapce({ 
+            form: finalValues,
+            param: { workspaceId: initialValues.$id }
+        }, {
             onSuccess: ({ data }) => {
                 form.reset();
                 router.push(`/workspaces/${data.$id}`)
@@ -73,7 +79,7 @@ const CreateWorkspaceForm = ({
         <Card className="w-full h-full border-none shadow-none">
             <CardHeader className="flex p-7">
                 <CardTitle className="text-xl font-bold">
-                    Create a new workspace
+                    {initialValues.name}
                 </CardTitle>
             </CardHeader>
             <div className="px-7">
@@ -169,7 +175,7 @@ const CreateWorkspaceForm = ({
                                 size="lg"
                                 disabled={isPending}
                             >
-                                Create Workspace
+                                Update Workspace
                             </Button>
                         </div>
                     </form>
@@ -179,4 +185,4 @@ const CreateWorkspaceForm = ({
     )
 }
 
-export default CreateWorkspaceForm
+export default EditWorkspaceForm
