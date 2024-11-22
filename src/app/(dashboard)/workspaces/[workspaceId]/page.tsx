@@ -12,8 +12,10 @@ const WorkspaceIdPage = async ({
     const user = await getCurrent();
     if (!user) redirect("/sign-in");
 
+    const { workspaceId } = await params;
+
     return (
-        <div>WorkspaceIdPage {params.workspaceId}</div>
+        <div>WorkspaceIdPage {workspaceId}</div>
     )
 }
 

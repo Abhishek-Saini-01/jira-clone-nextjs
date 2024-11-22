@@ -4,24 +4,26 @@ import {
 } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
 
-
-interface WorkspaceAvatarProps {
+interface ProjectAvatarProps {
     image?: string;
     name: string;
     classname?: string;
+    fallbackClassName?: string;
 }
 
-const WorkspaceAvatar = ({
+const ProjectAvatar = ({
     name,
     classname,
-    image
-}: WorkspaceAvatarProps) => {
+    image,
+    fallbackClassName
+}: ProjectAvatarProps) => {
     if (image) {
         return (
             <div className={cn(
-                "size-10 relative rounded-md overflow-hidden",
+                "size-5 relative rounded-md overflow-hidden",
                 classname,
             )}>
                 <Image src={image} alt={name} fill className="object-cover" />
@@ -31,13 +33,16 @@ const WorkspaceAvatar = ({
 
     return (
         <Avatar className={
-            cn("size-10 rounded-md", classname)
+            cn("size-5 rounded-md", classname)
         }>
-            <AvatarFallback className="text-white bg-blue-600 font-semibold rounded-md uppercase text-lg">
+            <AvatarFallback className={twMerge(
+                "text-white bg-blue-600 font-semibold text-sm uppercase rounded-md",
+                fallbackClassName
+            )}>
                 {name[0]}
             </AvatarFallback>
         </Avatar>
     )
 }
 
-export default WorkspaceAvatar
+export default ProjectAvatar

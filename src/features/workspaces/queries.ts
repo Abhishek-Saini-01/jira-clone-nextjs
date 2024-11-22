@@ -52,7 +52,7 @@ export const getWorkspace = async ({
             userId: user.$id
         })
         if (!member) {
-            return null;
+            throw new Error("Unauthorized");
         }
 
         const workspace = await databases.getDocument<Workspace>(
@@ -76,7 +76,7 @@ export const getWorkspaceInfo = async ({
 }: GetWorkspaceInfoProps) => {
     try {
         const { databases } = await createSessionClient();
-       
+
         const workspace = await databases.getDocument<Workspace>(
             DATABASE_ID,
             WORKSPACES_ID,

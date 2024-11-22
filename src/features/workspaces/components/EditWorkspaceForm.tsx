@@ -47,7 +47,7 @@ const EditWorkspaceForm = ({
     const { mutate: updateWorksapce, isPending } = useUpdateWorkspace();
     const { mutate: deleteWorksapce, isPending: isDeletingWorkspace } = useDeleteWorkspace();
     const { mutate: resetInviteCode, isPending: isResetingInviteCode } = useResetInviteCode();
-    
+
     const [DeleteDialog, confirmDelete] = useConfirm(
         "Delete Workspace",
         "This action cannot be undone.",
@@ -71,15 +71,15 @@ const EditWorkspaceForm = ({
 
     const handleDeleteWorkspace = async () => {
         const ok = await confirmDelete();
-        if(!ok) return;
+        if (!ok) return;
         deleteWorksapce({
-            param: { workspaceId: initialValues.$id  },
+            param: { workspaceId: initialValues.$id },
         }, {
             onSuccess: () => {
                 toast.success("Workspace deleted successfully.");
                 window.location.href = "/";
             }
-        })        
+        })
     }
 
     const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
@@ -91,9 +91,8 @@ const EditWorkspaceForm = ({
             form: finalValues,
             param: { workspaceId: initialValues.$id }
         }, {
-            onSuccess: ({ data }) => {
+            onSuccess: () => {
                 form.reset();
-                router.push(`/workspaces/${data.$id}`)
             }
         })
     }
@@ -113,15 +112,10 @@ const EditWorkspaceForm = ({
     }
     const handleResetInviteCode = async () => {
         const ok = await confirmReset();
-        if(!ok) return;
+        if (!ok) return;
         resetInviteCode({
-            param: { workspaceId: initialValues.$id  },
-        }, {
-            onSuccess: () => {
-                toast.success("Workspace Invite code updated successfully.");
-                router.refresh();
-            }
-        })        
+            param: { workspaceId: initialValues.$id },
+        })
     }
     return (
         <div className="flex flex-col gap-y-4">
@@ -269,20 +263,20 @@ const EditWorkspaceForm = ({
                         </p>
                         <div className="mt-4">
                             <div className="flex items-center gap-x-2">
-                                <Input 
-                                    disabled 
+                                <Input
+                                    disabled
                                     value={fullInviteLink}
                                 />
-                                <Button 
+                                <Button
                                     onClick={handleCopyInviteLink}
                                     variant="secondary"
                                     className="size-12"
                                 >
-                                    <CopyIcon className="size-5"/>
+                                    <CopyIcon className="size-5" />
                                 </Button>
                             </div>
                         </div>
-                        <DottedSeparator classname="py-7"/>
+                        <DottedSeparator classname="py-7" />
                         <Button
                             className="mt-6 w-fit ml-auto"
                             size="sm"
@@ -304,7 +298,7 @@ const EditWorkspaceForm = ({
                         <p className="text-sm text-muted-foreground">
                             Deleting a workspace is a irreversible operation and will remove all associated data.
                         </p>
-                        <DottedSeparator classname="py-7"/>
+                        <DottedSeparator classname="py-7" />
                         <Button
                             className="mt-6 w-fit ml-auto"
                             size="sm"
