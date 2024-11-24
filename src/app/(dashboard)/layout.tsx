@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import CreateProjectModal from "@/features/projects/components/CreateProjectModal";
+import CreateTaskModal from "@/features/tasks/components/CreateTaskModal";
 import CreateWorkspaceModal from "@/features/workspaces/components/CreateWorkspaceModal";
 
 
@@ -14,6 +15,7 @@ const DashboardLayout = ({
         <div className="min-h-screen">
             <CreateWorkspaceModal />
             <CreateProjectModal />
+            <CreateTaskModal />
             <div className="flex w-full h-full">
                 <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
                     <Sidebar />

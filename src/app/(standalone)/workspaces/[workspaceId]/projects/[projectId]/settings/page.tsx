@@ -1,4 +1,5 @@
 import { getCurrent } from "@/features/auth/queries";
+import EditProjectForm from "@/features/projects/components/EditProjectsForm";
 import { getProject } from "@/features/projects/queries";
 import { redirect } from "next/navigation";
 
@@ -22,7 +23,9 @@ const ProjectIdSettingsPage = async ({
 
     return (
         <div className="w-full lg:max-w-xl">
-            {initialValues.$id}
+            <EditProjectForm
+                initialValues={initialValues}
+            />
         </div>
     )
 }
