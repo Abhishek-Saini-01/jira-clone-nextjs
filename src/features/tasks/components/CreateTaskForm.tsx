@@ -30,7 +30,6 @@ import ProjectAvatar from "@/features/projects/components/ProjectAvatar";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCreateTask } from "../api/useCreateTask";
@@ -55,7 +54,7 @@ const CreateTaskForm = ({
     memberOptions,
     projectOptions
 }: CreateTaskFormProps) => {
-    const router = useRouter();
+
     const workspaceId = useWorkspaceId();
     const { mutate: createTask, isPending } = useCreateTask();
 
@@ -70,7 +69,7 @@ const CreateTaskForm = ({
         createTask({ json: { ...values, workspaceId } }, {
             onSuccess: () => {
                 form.reset();
-                // router.push(`/workspaces/${workspaceId}/projects/${data.$id}`)
+                onCancel?.();
             }
         })
     }

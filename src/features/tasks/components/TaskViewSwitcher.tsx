@@ -8,13 +8,46 @@ import {
     TabsList,
     TabsTrigger
 } from "@/components/ui/tabs";
-import { PlusIcon } from "lucide-react";
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
+import { Loader, PlusIcon } from "lucide-react";
+import { useQueryState } from "nuqs";
+import { useGetTasks } from "../api/useGetTasks";
 import { useCreateTaskModal } from "../hooks/useCreateTaskModal";
+import { useTaskFilters } from "../hooks/useTaskFilters";
+import DataFilters from "./DataFilters";
+import { DataTable } from "./DataTable";
+import { columns } from "./columns";
 
 export const TaskViewSwitcher = () => {
+    const [{
+        status,
+        assigneeId,
+        dueDate,
+        projectId,
+        search
+    }] = useTaskFilters();
+
+    const [view, setView] = useQueryState("task-view", {
+        defaultValue: "table"
+    });
+    const workspaceId = useWorkspaceId();
+    const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
+        workspaceId,
+        assigneeId,
+        dueDate,
+        projectId,
+        search,
+        status
+    })
     const { open } = useCreateTaskModal();
+
+
+    console.log("DD", tasks?.documents);
+
     return (
         <Tabs
+            defaultValue={view}
+            onValueChange={setView}
             className="flex-1 w-full border rounded-lg"
         >
             <div className="h-full flex-col overflow-auto p-4">
@@ -49,19 +82,28 @@ export const TaskViewSwitcher = () => {
                     </Button>
                 </div>
                 <DottedSeparator classname="my-4" />
-                Data filters
+                <DataFilters />
                 <DottedSeparator classname="my-4" />
-                <>
-                    <TabsContent value="table" className="mt-0">
-                        Data table
-                    </TabsContent>
-                    <TabsContent value="kanban" className="mt-0">
-                        Data kanban
-                    </TabsContent>
-                    <TabsContent value="calendar" className="mt-0">
-                        Data Calendar
-                    </TabsContent>
-                </>
+                {isLoadingTasks ? (
+                    <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
+                        <Loader className="size-5 animate-spin text-muted-foreground" />
+                    </div>
+                ) : (
+                    <>
+                        <TabsContent value="table" className="mt-0">
+                            <DataTable
+                                columns={columns}
+                                data={tasks?.documents ?? []}
+                            />
+                        </TabsContent>
+                        <TabsContent value="kanban" className="mt-0">
+                            {JSON.stringify(tasks)}
+                        </TabsContent>
+                        <TabsContent value="calendar" className="mt-0">
+                            {JSON.stringify(tasks)}
+                        </TabsContent>
+                    </>
+                )}
             </div>
         </Tabs>
     )
