@@ -23,8 +23,8 @@ const app = new Hono()
                 MEMBERS_ID,
                 [Query.equal("userId", user.$id)]
             )
-            if(members.total === 0){
-                return c.json({data: {documents: [], total: 0}})
+            if (members.total === 0) {
+                return c.json({ data: { documents: [], total: 0 } })
             }
 
             const workspaceIds = members.documents.map((member) => member.workspaceId);
@@ -33,8 +33,8 @@ const app = new Hono()
             const workspaces = await database.listDocuments(
                 DATABASE_ID,
                 WORKSPACES_ID,
-                [   Query.orderDesc("$createdAt"),
-                    Query.contains("$id", workspaceIds)
+                [Query.orderDesc("$createdAt"),
+                Query.contains("$id", workspaceIds)
                 ],
             );
 
@@ -105,14 +105,14 @@ const app = new Hono()
             const { workspaceId } = c.req.param();
             const { name, image } = c.req.valid("form");
 
-            const member = await getMember({ 
-                databases, 
-                workspaceId, 
+            const member = await getMember({
+                databases,
+                workspaceId,
                 userId: user.$id
             });
 
-            if(!member || member.role   !== MemberRole.ADMIN) {
-                return c.json({error: "Unauthorized"}, 401);
+            if (!member || member.role !== MemberRole.ADMIN) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
             let uploadedImageUrl: string | undefined;
@@ -159,7 +159,7 @@ const app = new Hono()
                 userId: user.$id
             });
 
-            if(!member || member.role !== MemberRole.ADMIN){
+            if (!member || member.role !== MemberRole.ADMIN) {
                 return c.json({ error: "Unauthorized" }, 401)
             }
 
@@ -171,7 +171,7 @@ const app = new Hono()
                 workspaceId
             );
 
-            return c.json({ data: { $id: workspaceId }});
+            return c.json({ data: { $id: workspaceId } });
         }
     )
     .post(
@@ -188,7 +188,7 @@ const app = new Hono()
                 userId: user.$id
             });
 
-            if(!member || member.role !== MemberRole.ADMIN){
+            if (!member || member.role !== MemberRole.ADMIN) {
                 return c.json({ error: "Unauthorized" }, 401)
             }
 
@@ -201,7 +201,7 @@ const app = new Hono()
                 }
             );
 
-            return c.json({ data: workspace});
+            return c.json({ data: workspace });
         }
     )
     .post(
@@ -223,7 +223,7 @@ const app = new Hono()
                 userId: user.$id
             });
 
-            if(member){
+            if (member) {
                 return c.json({ error: "Already a member" }, 400)
             };
 
@@ -232,8 +232,8 @@ const app = new Hono()
                 WORKSPACES_ID,
                 workspaceId
             );
-            if(workspace.inviteCode !== code ){
-                return c.json({ error: "Invalid invite code"},401)
+            if (workspace.inviteCode !== code) {
+                return c.json({ error: "Invalid invite code" }, 401)
             };
 
             await databases.createDocument(
@@ -246,8 +246,58 @@ const app = new Hono()
                     role: MemberRole.MEMBER
                 }
             )
-            
-            return c.json({ data: workspace});
+
+            return c.json({ data: workspace });
+        }
+    )
+    .get(
+        "/:workspaceId",
+        sessionMiddleware,
+        async (c) => {
+            const user = c.get("user");
+            const databases = c.get("databases");
+            const { workspaceId } = c.req.param();
+
+            const member = await getMember({
+                databases,
+                workspaceId,
+                userId: user.$id
+            });
+            if (!member) {
+                return c.json({
+                    error: "Unauthorized"
+                }, 401)
+            }
+
+            const workspace = await databases.getDocument<Workspace>(
+                DATABASE_ID,
+                WORKSPACES_ID,
+                workspaceId,
+            );
+
+            return c.json({ data: workspace })
+        }
+    )
+    .get(
+        "/:workspaceId/info",
+        sessionMiddleware,
+        async (c) => {
+            const databases = c.get("databases");
+            const { workspaceId } = c.req.param();
+
+            const workspace = await databases.getDocument<Workspace>(
+                DATABASE_ID,
+                WORKSPACES_ID,
+                workspaceId,
+            );
+
+            return c.json({
+                data: {
+                    $id: workspace.$id,
+                    name: workspace.name,
+                    imageUrl: workspace.imageUrl
+                }
+            })
         }
     )
 

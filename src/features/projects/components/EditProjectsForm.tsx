@@ -27,8 +27,6 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { useDeleteWorkspace } from "../api/useDeleteWorkspace";
-// import { useResetInviteCode } from "../api/useResetInviteCode";
 import { useUpdateProject } from "../api/useUpdateProject";
 
 import { toast } from "sonner";
@@ -51,7 +49,7 @@ const EditProjectForm = ({
 
 
     const [DeleteDialog, confirmDelete] = useConfirm(
-        "Delete Workspace",
+        "Delete Project",
         "This action cannot be undone.",
         "destructive"
     );
@@ -66,7 +64,7 @@ const EditProjectForm = ({
         }
     })
 
-    const handleDeleteWorkspace = async () => {
+    const handleDeleteProject = async () => {
         const ok = await confirmDelete();
         if (!ok) return;
         deleteProject({
@@ -90,7 +88,6 @@ const EditProjectForm = ({
         }, {
             onSuccess: () => {
                 form.reset();
-                router.refresh();
             }
         })
     }
@@ -253,9 +250,9 @@ const EditProjectForm = ({
                             variant="destructive"
                             type="button"
                             disabled={isPending || isDeletingProject}
-                            onClick={handleDeleteWorkspace}
+                            onClick={handleDeleteProject}
                         >
-                            Update Workspace
+                            Delete Project
                         </Button>
                     </div>
                 </CardContent>

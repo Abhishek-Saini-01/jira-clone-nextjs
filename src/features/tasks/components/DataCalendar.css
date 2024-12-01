@@ -26,7 +26,7 @@
 
 .rbc-month-row:last-of-type {
   @apply border-b;
-  @apply border-b-md;
+  @apply border-b-4;
 }
 
 .rbc-month-view {

@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";

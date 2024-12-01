@@ -1,3 +1,4 @@
+"use client"
 import MemberAvatar from "@/features/members/components/MemberAvatar";
 import ProjectAvatar from "@/features/projects/components/ProjectAvatar";
 import { Project } from "@/features/projects/types";
