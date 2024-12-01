@@ -41,7 +41,11 @@ const TaskActions = ({
         const ok = await confirm();
         if (!ok) return;
 
-        deleteTask({ param: { taskId: id } });
+        deleteTask({ param: { taskId: id } }, {
+            onSuccess: () => {
+                router.refresh();
+            }
+        });
     }
 
     const onOpenTask = () => {

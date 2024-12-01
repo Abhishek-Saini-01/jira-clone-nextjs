@@ -8,17 +8,28 @@ import {
     TabsList,
     TabsTrigger
 } from "@/components/ui/tabs";
+import DataKanban from "@/features/tasks/components/DataKanban";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { Loader, PlusIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { useCallback } from "react";
+import { useBulkUpdateTasks } from "../api/useBulkUpdateTasks";
 import { useGetTasks } from "../api/useGetTasks";
 import { useCreateTaskModal } from "../hooks/useCreateTaskModal";
 import { useTaskFilters } from "../hooks/useTaskFilters";
+import { TaskStatus } from "../types";
+import { columns } from "./columns";
+import DataCalender from "./DataCalender";
 import DataFilters from "./DataFilters";
 import { DataTable } from "./DataTable";
-import { columns } from "./columns";
 
-export const TaskViewSwitcher = () => {
+interface TaskViewSwitcherProps {
+    hideProjectFilters?: boolean;
+}
+
+export const TaskViewSwitcher = ({
+    hideProjectFilters
+}: TaskViewSwitcherProps) => {
     const [{
         status,
         assigneeId,
@@ -40,9 +51,19 @@ export const TaskViewSwitcher = () => {
         status
     })
     const { open } = useCreateTaskModal();
+    const { mutate: bulkUpdate } = useBulkUpdateTasks();
 
-
-    console.log("DD", tasks?.documents);
+    const onKandanChange = useCallback((
+        tasks: {
+            $id: string;
+            status: TaskStatus;
+            position: number;
+        }[]
+    ) => {
+        bulkUpdate({
+            json: { tasks }
+        })
+    }, [bulkUpdate])
 
     return (
         <Tabs
@@ -82,7 +103,7 @@ export const TaskViewSwitcher = () => {
                     </Button>
                 </div>
                 <DottedSeparator classname="my-4" />
-                <DataFilters />
+                <DataFilters hideProjectFilter={hideProjectFilters} />
                 <DottedSeparator classname="my-4" />
                 {isLoadingTasks ? (
                     <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
@@ -97,10 +118,13 @@ export const TaskViewSwitcher = () => {
                             />
                         </TabsContent>
                         <TabsContent value="kanban" className="mt-0">
-                            {JSON.stringify(tasks)}
+                            <DataKanban
+                                data={tasks?.documents ?? []}
+                                onChange={onKandanChange}
+                            />
                         </TabsContent>
-                        <TabsContent value="calendar" className="mt-0">
-                            {JSON.stringify(tasks)}
+                        <TabsContent value="calendar" className="mt-0 h-full pb-4">
+                            <DataCalender data={tasks?.documents ?? []} />
                         </TabsContent>
                     </>
                 )}
