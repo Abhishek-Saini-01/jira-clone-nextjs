@@ -3,13 +3,11 @@ import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
-import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<typeof client.api.tasks["bulk-update"]["$post"], 200>
 type RequestType = InferRequestType<typeof client.api.tasks["bulk-update"]["$post"]>;
 
 export const useBulkUpdateTasks = () => {
-   const router = useRouter();
    const queryClient = useQueryClient();
    const mutation = useMutation<
       ResponseType,
@@ -25,7 +23,6 @@ export const useBulkUpdateTasks = () => {
       },
       onSuccess: () => {
          toast.success("Tasks updated.");
-         router.refresh();
          queryClient.invalidateQueries({ queryKey: ["tasks"] });
       },
       onError: () => {

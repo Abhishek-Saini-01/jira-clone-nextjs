@@ -3,13 +3,11 @@ import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
-import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<typeof client.api.tasks[":taskId"]["$patch"], 200>
 type RequestType = InferRequestType<typeof client.api.tasks[":taskId"]["$patch"]>;
 
 export const useEditTask = () => {
-   const router = useRouter();
    const queryClient = useQueryClient();
    const mutation = useMutation<
       ResponseType,
@@ -25,7 +23,6 @@ export const useEditTask = () => {
       },
       onSuccess: ({ data }) => {
          toast.success("Task edited.")
-         router.refresh();
          queryClient.invalidateQueries({ queryKey: ["tasks"] });
          queryClient.invalidateQueries({ queryKey: ["task", data.$id] });
       },

@@ -3,13 +3,11 @@ import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
-import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<typeof client.api.projects[":projectId"]["$delete"], 200>
 type RequestType = InferRequestType<typeof client.api.projects[":projectId"]["$delete"]>;
 
 export const useDeleteProject = () => {
-   const router = useRouter();
    const queryClient = useQueryClient();
    const mutation = useMutation<
       ResponseType,
@@ -25,7 +23,6 @@ export const useDeleteProject = () => {
       },
       onSuccess: ({ data }) => {
          toast.success("Project delete.")
-         router.refresh();
          queryClient.invalidateQueries({ queryKey: ["projects"] });
          queryClient.invalidateQueries({ queryKey: ["project", data.$id] });
       },
