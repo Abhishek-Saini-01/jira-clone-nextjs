@@ -2,7 +2,6 @@ import DottedSeparator from "@/components/DottedSeparator";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PencilIcon, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEditTask } from "../api/useEditTask";
 import { Task } from "../types";
@@ -13,7 +12,6 @@ interface TaskDescriptionProps {
 const TaskDescription = ({
     task
 }: TaskDescriptionProps) => {
-    const router = useRouter();
     const { mutate: updateTask, isPending: isUpdatingTask } = useEditTask();
 
     const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +23,7 @@ const TaskDescription = ({
             param: { taskId: task.$id },
         }, {
             onSuccess: () => {
-                router.refresh();
+                setIsEditing(false);
             }
         })
     }

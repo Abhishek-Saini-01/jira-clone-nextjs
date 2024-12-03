@@ -5,7 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { Query } from "node-appwrite";
 import { z } from "zod";
-import { MemberRole } from "../types";
+import { Member, MemberRole } from "../types";
 import { getMember } from "../utils";
 
 const app = new Hono()
@@ -25,20 +25,20 @@ const app = new Hono()
                 workspaceId,
                 userId: user.$id
             });
-            if(!member) {
-                return c.json({ error: "Unauthorized"}, 401);
+            if (!member) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
-            const members = await databases.listDocuments(
+            const members = await databases.listDocuments<Member>(
                 DATABASE_ID,
                 MEMBERS_ID,
                 [Query.equal("workspaceId", workspaceId)]
             );
 
             const populatedMembers = await Promise.all(
-                members.documents.map( async (member) => {
+                members.documents.map(async (member) => {
                     const user = await users.get(member.userId);
-                    
+
                     return {
                         ...member,
                         name: user.name,
@@ -81,16 +81,16 @@ const app = new Hono()
                 userId: user.$id
             })
 
-            if(!member){
-                return c.json({ error: "Unauthorized"},401);
+            if (!member) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
-            if(member.$id !== memberToDelete.$id && member.role !== MemberRole.ADMIN){
-                return c.json({ error: "Unauthorized"},401);              
+            if (member.$id !== memberToDelete.$id && member.role !== MemberRole.ADMIN) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
-            if(allMembersInWorkspace.total === 1){
-                return c.json({ error: "Cannot delete the only member"},401);              
+            if (allMembersInWorkspace.total === 1) {
+                return c.json({ error: "Cannot delete the only member" }, 401);
             }
 
             await databases.deleteDocument(
@@ -98,13 +98,13 @@ const app = new Hono()
                 MEMBERS_ID,
                 memberId
             )
-            return c.json({ data: { $id: memberToDelete.$id }})
+            return c.json({ data: { $id: memberToDelete.$id } })
         }
     )
     .patch(
         "/:memberId",
         sessionMiddleware,
-        zValidator("json", z.object({role: z.nativeEnum(MemberRole)})),
+        zValidator("json", z.object({ role: z.nativeEnum(MemberRole) })),
         async (c) => {
             const { memberId } = c.req.param();
             const { role } = c.req.valid("json");
@@ -129,16 +129,16 @@ const app = new Hono()
                 userId: user.$id
             })
 
-            if(!member){
-                return c.json({ error: "Unauthorized"},401);
+            if (!member) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
-            if(member.role !== MemberRole.ADMIN){
-                return c.json({ error: "Unauthorized"},401);              
+            if (member.role !== MemberRole.ADMIN) {
+                return c.json({ error: "Unauthorized" }, 401);
             }
 
-            if(allMembersInWorkspace.total === 1){
-                return c.json({ error: "Cannot down grade the only member"},401);              
+            if (allMembersInWorkspace.total === 1) {
+                return c.json({ error: "Cannot down grade the only member" }, 401);
             }
 
             await databases.updateDocument(
@@ -150,7 +150,7 @@ const app = new Hono()
                 }
             )
 
-            return c.json({ data: { $id: memberToUpdate.$id }})
+            return c.json({ data: { $id: memberToUpdate.$id } })
         }
 
     )
