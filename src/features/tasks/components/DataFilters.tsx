@@ -46,6 +46,7 @@ const DataFilters = ({
         assigneeId,
         dueDate,
         projectId,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         search
     }, setFilters] = useTaskFilters();
 

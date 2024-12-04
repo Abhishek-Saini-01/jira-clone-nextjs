@@ -8,6 +8,7 @@ import {
     TabsList,
     TabsTrigger
 } from "@/components/ui/tabs";
+import { useProjectId } from "@/features/projects/hooks/useProjectId";
 import DataKanban from "@/features/tasks/components/DataKanban";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { Loader, PlusIcon } from "lucide-react";
@@ -42,11 +43,12 @@ export const TaskViewSwitcher = ({
         defaultValue: "table"
     });
     const workspaceId = useWorkspaceId();
+    const paramProjectId = useProjectId();
     const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
         workspaceId,
         assigneeId,
         dueDate,
-        projectId,
+        projectId: paramProjectId || projectId,
         search,
         status
     })

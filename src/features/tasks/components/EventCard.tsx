@@ -1,5 +1,6 @@
 "use client"
 import MemberAvatar from "@/features/members/components/MemberAvatar";
+import { Member } from "@/features/members/types";
 import ProjectAvatar from "@/features/projects/components/ProjectAvatar";
 import { Project } from "@/features/projects/types";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
@@ -10,7 +11,7 @@ import { TaskStatus } from "../types";
 interface EventCardProps {
     id: string;
     title: string;
-    assignee: any;
+    assignee: Member;
     project: Project;
     status: TaskStatus;
 }
