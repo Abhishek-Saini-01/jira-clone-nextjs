@@ -9,7 +9,7 @@ import {
 
 import { enUS } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./dataCalendar.css";
+// import "./dataCalendar.css";
 
 import { useState } from "react";
 import {
