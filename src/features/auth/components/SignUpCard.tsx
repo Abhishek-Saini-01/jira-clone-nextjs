@@ -16,6 +16,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -38,7 +39,7 @@ const SignUpCard = () => {
     })
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        register({json: values});
+        register({ json: values });
     }
 
     return (
@@ -138,6 +139,7 @@ const SignUpCard = () => {
                     variant="secondary"
                     size="lg"
                     className="w-full"
+                    onClick={() => signUpWithGoogle()}
                 >
                     <FcGoogle className="mr-2 size-5" />
                     Login with Google
@@ -147,6 +149,7 @@ const SignUpCard = () => {
                     variant="secondary"
                     size="lg"
                     className="w-full"
+                    onClick={() => signUpWithGithub()}
                 >
                     <FaGithub className="mr-2 size-5" />
                     Login with Github

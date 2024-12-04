@@ -210,7 +210,7 @@ export const MembersList = ({
                                     />
                                     <div className="flex flex-col items-center overflow-hidden">
                                         <p className="text-lg font-medium line-clamp-1">{member.name}</p>
-                                        <p className="text-sm text-muted-foreground line-clamp-1">{member.email}</p>
+                                        <p className="text-xs text-muted-foreground line-clamp-1">{member.email}</p>
                                     </div>
                                 </CardContent>
                             </Card>

@@ -15,6 +15,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -27,7 +28,7 @@ import { loginSchema } from "../schema";
 
 const SignInCard = () => {
 
-    const { mutate:login, isPending } = useLogin();
+    const { mutate: login, isPending } = useLogin();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -38,7 +39,7 @@ const SignInCard = () => {
     })
 
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        login({json: values});
+        login({ json: values });
     }
 
     return (
@@ -89,7 +90,7 @@ const SignInCard = () => {
                         />
 
                         <Button
-                           disabled={isPending}
+                            disabled={isPending}
                             size="lg"
                             className="w-full"
                             type="submit"
@@ -104,6 +105,7 @@ const SignInCard = () => {
             </div>
             <CardContent className="p-7 flex flex-col gap-y-4">
                 <Button
+                    onClick={() => signUpWithGoogle()}
                     disabled={isPending}
                     variant="secondary"
                     size="lg"
@@ -113,6 +115,7 @@ const SignInCard = () => {
                     Login with Google
                 </Button>
                 <Button
+                    onClick={() => signUpWithGithub()}
                     disabled={isPending}
                     variant="secondary"
                     size="lg"
